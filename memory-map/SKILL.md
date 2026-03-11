@@ -1,19 +1,19 @@
 # Memory Map
 
-Render memories as geographic and conceptual maps. Pin memories to real-world locations, visualize movement patterns, and discover spatial clusters — turning life experiences into explorable, shareable map layers.
+Render and query conceptual memory maps using Mercury APIs.
 
 ## Usage
 
 ```bash
-memory-map render <user-id>        # Generate memory map
-memory-map overlay <user-id>       # Add memory pins to existing map
-memory-map export <user-id>        # Export as interactive HTML/GeoJSON
+memory-map render [--map-type category|description]
+memory-map search --query <text> [--map-type category|description] [--limit <n>]
+memory-map convergence [--map-type category|description] [--run-index <n>] [--max-tier <n>]
+memory-map compute-convergence [--map-type category|description]
 ```
 
-## Features
+## First-pass behavior
 
-- Geo-tagged memory visualization with clustering
-- Temporal playback (watch memories unfold over time)
-- Conceptual map mode (non-geographic topic clustering)
-- Shareable embeddable map widgets
-- Privacy controls per memory pin
+- `render` fetches the current map node set.
+- `search` returns map nodes related to a query.
+- `convergence` returns convergence runs and candidate paths.
+- `compute-convergence` triggers recomputation on backend.

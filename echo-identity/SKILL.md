@@ -1,19 +1,21 @@
 # Echo Identity
 
-Generate multi-layer identity profiles from memory evidence. Analyzes behavioral patterns across memories to produce depth-ordered identity sentences — from surface traits to deepest drivers — each backed by cited memory IDs.
+Prompt and profile utilities over EchoMem extension APIs.
 
 ## Usage
 
 ```bash
-echo-identity generate <user-id>   # Generate identity profile
-echo-identity update <user-id>     # Regenerate preserving user edits
-echo-identity export <user-id>     # Export profile as JSON/markdown
+echo-identity profile
+echo-identity templates [--limit <n>]
+echo-identity template-create --title <text> --template <text> [--tags a,b,c]
+echo-identity template-delete --ids <id1,id2,...>
+echo-identity extract --file <path> [--save true|false]
+echo-identity compose --intent <text> [--template-ids id1,id2] [--memory-ids id1,id2]
 ```
 
-## Features
+## First-pass behavior
 
-- Behavior > self-description analysis method
-- Contradiction/tension pair detection
-- Depth ordering: surface → core drivers
-- Public/private visibility per sentence
-- User edit preservation across regenerations
+- `profile` returns account profile summary.
+- `templates` and `template-*` manage prompt templates.
+- `extract` parses raw content into prompt templates.
+- `compose` generates prompts from selected templates and memories.
