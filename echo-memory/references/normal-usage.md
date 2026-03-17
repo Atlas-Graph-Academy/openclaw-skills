@@ -54,6 +54,18 @@ Do not confuse these two surfaces:
 
 If the user says "view my memories" without saying graph, iditor, or public page, prefer the local UI.
 
+Do not confuse local UI with cloud sync either:
+
+- local UI can show the wider OpenClaw workspace markdown structure
+- cloud retrieval depends on what was actually imported from `memoryDir`
+- a file being browsable locally does not guarantee it will appear in cloud search
+
+Common local file expectations:
+
+- `workspace/MEMORY.md` for curated long-term memory
+- `workspace/memory/YYYY-MM-DD.md` for daily logs
+- topic or project subfolders for local organization
+
 ## Tool mapping
 
 - `echo_memory_onboard`: setup, onboarding, commands, troubleshooting

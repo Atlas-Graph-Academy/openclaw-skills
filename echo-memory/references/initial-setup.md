@@ -15,6 +15,36 @@ Use this reference when the user has not installed the plugin yet.
 - starts a local localhost workspace UI during gateway startup
 - makes EchoMemory functions reachable from natural language through the registered tool surface
 
+## OpenClaw file structure to expect
+
+Typical local layout:
+
+```text
+~/.openclaw/
+  workspace/
+    MEMORY.md
+    memory/
+      2026-03-17.md
+      2026-03-16.md
+      topics/
+      private/
+```
+
+Useful interpretation:
+
+- `workspace/MEMORY.md` is the curated long-term memory file
+- `workspace/memory/` is the usual daily memory area
+- date-named files like `2026-03-17.md` are normal daily logs
+- subfolders such as `topics/` help local organization
+
+Important current behavior:
+
+- the local UI can browse the wider workspace markdown structure
+- cloud sync uses the configured `memoryDir`
+- the current sync importer reads top-level `.md` files from that `memoryDir`
+
+So "visible in the local UI" is not the same as "already included in cloud sync."
+
 ## Install paths
 
 Published package install:
@@ -102,6 +132,14 @@ If an old key is already present, remove it instead of keeping both.
 }
 ```
 
+For most users, the right starting value is:
+
+```text
+memoryDir = ~/.openclaw/workspace/memory
+```
+
+If a user stores important notes in `workspace/MEMORY.md` or deeper subfolders, explain that they may still see those locally while cloud sync behavior is driven by `memoryDir`.
+
 ## First restart
 
 ```powershell
@@ -128,6 +166,11 @@ Transient restart pitfall:
 2. `/echo-memory status`
 3. `/echo-memory sync`
 4. `/echo-memory search <known topic>`
+
+Also verify a file-path expectation:
+
+1. the files the user expects to sync are actually in the configured `memoryDir`
+2. the user is not assuming every markdown file visible in the local UI is part of cloud sync
 
 If the localhost UI is not active after restart:
 
@@ -168,3 +211,6 @@ These came from an actual setup/debug session and are worth checking early:
 
 6. Manual local UI startup is a fallback, not the preferred steady state.
    It is useful when discovery fails, especially around version mismatch, but normal operation should come from plugin startup on `openclaw gateway restart`.
+
+7. Local UI and cloud sync do not cover the exact same file set.
+   If a note appears in the local viewer but not in cloud search, check whether it lives inside the configured sync directory and whether it is a top-level markdown file for the current importer.

@@ -16,6 +16,37 @@ Prefer the plugin's current runtime behavior over old repo habits:
 - browser auto-open is skipped automatically on headless, SSH, or CI sessions
 - removing the API key from the local UI forces local-only mode for future loads
 
+## OpenClaw memory layout
+
+This plugin works best when the user understands the difference between the OpenClaw workspace layout, the local UI surface, and the cloud sync surface.
+
+Typical OpenClaw memory files:
+
+```text
+~/.openclaw/
+  workspace/
+    MEMORY.md
+    memory/
+      2026-03-17.md
+      2026-03-16.md
+      topics/
+      private/
+```
+
+Recommended mental model:
+
+- `workspace/MEMORY.md`: curated long-term memory and durable notes worth keeping visible
+- `workspace/memory/YYYY-MM-DD.md`: daily logs and session-by-session memory capture
+- `workspace/memory/topics/` or similar subfolders: topic-specific markdown files for local browsing and organization
+- `workspace/memory/private/`: local private notes that may appear in the local UI scan path and should be reviewed carefully before assuming they belong in cloud sync
+
+Important behavior difference:
+
+- cloud sync reads top-level `.md` files from the configured `memoryDir`
+- the local UI scans the wider OpenClaw workspace recursively and can show more files than the cloud sync path imports
+
+That means a user can see a file in the local UI without that file necessarily being included in cloud sync.
+
 ## Initial setup from zero
 
 Use this flow when the user has not installed the plugin yet.
@@ -34,6 +65,7 @@ Recommended setup order:
 4. Add the plugin config and set `tools.profile` to `"full"`.
 5. Restart the gateway.
 6. Verify the local UI and command surface.
+7. Confirm the user understands which local markdown files are visible locally versus actually synced to cloud.
 
 ### Install options
 
@@ -119,6 +151,14 @@ Use this as the baseline cloud-mode setup for a new install:
   }
 }
 ```
+
+For the default OpenClaw layout, `memoryDir` is usually:
+
+```text
+~/.openclaw/workspace/memory
+```
+
+This is the cloud sync directory. By current plugin behavior, sync reads the top-level markdown files inside that directory.
 
 Environment file alternative in `~/.openclaw/.env`:
 
@@ -212,6 +252,12 @@ If the plugin is loaded but the user still cannot open the viewer:
 3. confirm `localUiAutoInstall` was not disabled before the first run
 4. use the fallback script at [`scripts/start-local-ui.mjs`](./scripts/start-local-ui.mjs)
 
+Explain the surface clearly when needed:
+
+- the local UI is a localhost workspace browser over OpenClaw markdown files
+- it can show more workspace files than the cloud sync importer uploads
+- cloud mode status in the UI depends on both config and a working API client, not just the presence of a saved key string
+
 ## Normal usage routing
 
 Map normal-language requests to the current plugin surface instead of replying from generic memory or setup knowledge.
@@ -237,6 +283,8 @@ Use `echo_memory_search` or `/echo-memory search <query>` when the user asks:
 - "search my memories for ..."
 - "find my notes about ..."
 - for prior facts, plans, dates, preferences, or decisions already stored in EchoMemory cloud
+
+If the user expects a local file to appear in cloud search, verify that the file is actually inside the sync directory and not only visible through the wider local UI workspace scan.
 
 Use `echo_memory_status` or `/echo-memory status` when the user asks about:
 
